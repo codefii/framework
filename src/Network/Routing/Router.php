@@ -120,14 +120,13 @@ class Router
             foreach($this->params as $action){
                 list($controller, $method) = explode('@', $action);
                 $controller = $this->convertToStudlyCaps($controller);
-                $controller = $this->convertToCamelCase($controller);
-                $class = "\App\\Controllers\\" .$controller.'controller';
+                $class = "\App\\Controllers\\" .$controller.'Controller';
               if (!class_exists($class)) {
                   $error ="Controller class $class not found";
                 View::render('System/notfound',['error'=>$error]);
               }
                   $controllerInstantiate = new $class($this->params);
-                  $method = $this->convertToCamelCase($method);
+                //   $method = $this->convertToCamelCase($method);
                   $method  = $this->convertToStudlyCaps($method);
               if (!method_exists($controllerInstantiate, $method)) {
                   $error = "Method $action (in controllercontroller) not found";
@@ -207,28 +206,5 @@ class Router
         return $url;
     }
 
-    /**
-     * Get the namespace for the controller class. The namespace defined in the
-     * route parameters is added if present.
-     *
-     * @return string The request URL
-     */
-    // protected function getNamespace()
-    // {
-    //     // $namespace = 'Codefii\Controllers\\';
-    //     //
-    //     // // if (array_key_exists('namespace', $this->params)) {
-    //     // //     $namespace .= $this->params['namespace'] . '\\';
-    //     // // }
-    //     // if(strpos($this->params,'nam'))
-    //     //
-    //     return $this->namespace;
-    //
-    // }
-    // public function setNamespace($namespace){
-    //     // if(empty($this->namespace)){
-    //     //     $this->namespace ='Codefii\Controllers\\';
-    //     // }
-    //     $this->namespace = $namespace;
-    // }
+  
 }
