@@ -1,0 +1,27 @@
+{
+	"name": "codefii/framework",
+	"description": "An easy to use php framework for building web applications.",
+	"keywords": [
+		"phpframework",
+		"codefii",
+		"codefiiphp"
+	],
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/codefii/framework"
+		}
+	],
+	"authors": [
+		{
+			"name": "Prince E. Darlington",
+			"email": "ekeminyd@gmail.com",
+			"homepage": "https://iamcoderisk.codefii.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Codefii\\": "src/Network/"
+		}
+	}
+}
