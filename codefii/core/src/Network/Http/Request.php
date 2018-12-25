@@ -1,49 +1,92 @@
 <?php
-
 namespace Codefii\Http;
-use Codefii\Session\Token;
 class Request
 {
-  public static $post_type=null;
-  public static function isPost(){
-    self::$post_type ='post';
-    if(isset(self::$post_type)){
-      // if(Token::check('token')){
-        return $_POST;
-      // }
+  public static $method=array();
+
+  public static $POST = "POST";
+
+  public static $GET  = "GET";
+
+  public static $DELETE = "DELETE";
+
+  public static $PUT = "PUT";
+
+ public static function exists():String{
+
+   $method = self::getMethod();
+
+    if($method){
+
+      if($method==self::$POST){
+
+        self::$method = $_POST;
+
+      }else if($method==self::$GET){
+
+        self::$method = $_GET;
+
+      }else if($method==self::$DELETE || $method==self::$PUT){
+
+        self::getContents();
+
+        $GLOBALS["_{$method}"] = self::$method;
+
+        $_REQUEST = self::$method + $_REQUEST;
+
+      }
     }
-  }
-  public static function getPostData(){
-    if(isset(self::$post_type)){
-      return $_POST;
-    }
-  }
-  public static function exists($type='post')
-  {
-    switch($type){
-      case 'post':
-      return (!empty($_POST)) ? true :false;
-      break;
-      case 'get':
-      return (!empty($_GET)) ? true :false;
-      break;
-      default:
-      return false;
-      break;
+    return $method;
+ }
+ public static function is(String $request=null):String{
+   if($request==self::$POST){
+
+     self::$method = $_POST;
+
+   } else if($request==self::$GET){
+
+     self::$method = $_GET;
+
+   }else if($request==self::$DELETE || self::$PUT){
+      self::getContents();
+        $GLOBALS["_{$request}"] = self::$method;
+
+        $_REQUEST = self::$method + $_REQUEST;
+   }
+   return $request;
+ }
+  public static function field(String $request):String{
+
+   if (isset(self::$method[$request])) {
+    
+      return self::$method[$request];
 
     }
-
   }
-  public static function get($item)
-  {
-    if(isset($_POST[$item]))
-    {
-      return $_POST[$item];
-    }else{
-      return $_GET[$item];
-    }
-    return '';//return an empty string
+  public static function getMethod():String{
+    return $_SERVER['REQUEST_METHOD'];
   }
- 
+  public static function allField(){
+    $request = self::getMethod();
 
+    if($request==self::$POST){
+
+     return $_POST;
+
+   } else if($request==self::$GET){
+
+    return $_GET;
+
+   }else if($request==self::$DELETE || self::$PUT){
+        self::getContents();
+        $GLOBALS["_{$request}"] = self::$method;
+
+        $_REQUEST = self::$method + $_REQUEST;
+        return $_REQUEST;
+   }
+   return $request;
+  }
+  public static function getContents(){
+    return  parse_str(file_get_contents('php://input'), self::$method);
+  }
 }
